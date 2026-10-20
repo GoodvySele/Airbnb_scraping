@@ -4,6 +4,14 @@ A powerful desktop application built with Python, **CustomTkinter**, **Playwrigh
 
 ---
 
+## 🎥 Demo Preview
+
+[![Airbnb Desktop Scraper Demo](https://img.youtube.com/vi/AtvjFy0rsG0/0.jpg)](https://www.youtube.com/watch?v=AtvjFy0rsG0)
+
+> *Click the image above to watch the full walkthrough and live demonstration on YouTube.*
+
+---
+
 ## 📂 Project Structure
 
 The project is structured around three core modular scripts:

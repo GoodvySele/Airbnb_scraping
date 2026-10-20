@@ -252,7 +252,7 @@ def main(city,
 
             
     else: # SQLite
-        file = save_location(city, "db")
+        file = save_location(city, "db", arriving, depart)
         with sqlite3.connect(file) as conn:
             cursor = conn.cursor()
             cursor.execute(f"DROP TABLE IF EXISTS Airbnb_{city}")
