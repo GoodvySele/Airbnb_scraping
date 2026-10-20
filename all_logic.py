@@ -26,14 +26,14 @@ timer_generation = 0
 timer_active = False
 
 
-def save_location(city, format):
+def save_location(city, format, arriving, depart):
     """Generates and returns the standardized file path in the user's Downloads directory 
     for saving the scraped Airbnb listings based on the city and format.
     """
-    town = city.capitalize()
+    town = city.upper()
     downloads_folder = Path.home() / "Downloads"
     downloads_folder.mkdir(parents=True, exist_ok=True)
-    file = downloads_folder / f"Airbnb_{town}.{format}"
+    file = downloads_folder / fr"Airbnb_{town}_({arriving}__{depart}).{format}"
     return file
 
 
@@ -227,7 +227,7 @@ def main(city,
         textbox.insert("end", "\n❌ Aucun logement trouvé.\n")
 
     format_choice = menu_format.get()
-    file = save_location(city, format_choice.lower())
+    file = save_location(city, format_choice.lower(), arriving, depart)
 
     if format_choice == "CSV":
         fieldnames = ["TITLE", "DETAILS", "LAYOUT", "PRICE", "RATING"]
@@ -239,7 +239,7 @@ def main(city,
         except PermissionError:
             textbox.insert("end", "\n❌ Error: Please close the CSV file if it's currently open in Microsoft Excel!\n")
 
-        textbox.insert("end", f"\nA file named 'Airbnb_{city.capitalize()}.csv' has been saved in your Downloads folder.\n")
+        textbox.insert("end", f"\nA file named 'Airbnb_{city.upper()}_({arriving}__{depart}).csv' has been saved in your Downloads folder.\n")
 
 
     elif format_choice == "JSON":
@@ -248,7 +248,7 @@ def main(city,
                 json.dump(all_listings, f, ensure_ascii=False, indent=4)
         except PermissionError:
             textbox.insert("end", "\n❌ ERROR: Please close the JSON file if open.\n")
-        textbox.insert("end", f"\nA file named 'Airbnb_{city.capitalize()}.json' has been saved in your Downloads folder.\n")
+        textbox.insert("end", f"\nA file named 'Airbnb_{city.upper()}_({arriving}__{depart}).json' has been saved in your Downloads folder.\n")
 
             
     else: # SQLite
@@ -274,7 +274,7 @@ def main(city,
                 f"INSERT INTO Airbnb_{city} (TITLE, DETAILS, LAYOUT, PRICE, RATING) VALUES (?, ?, ?, ?, ?)",
                 data,
             )
-        textbox.insert("end", f"\nA file named 'Airbnb_{city.capitalize()}.db' has been saved in your Downloads folder.\n")
+        textbox.insert("end", f"\nA file named 'Airbnb_{city.upper()}_({arriving}__{depart}).db' has been saved in your Downloads folder.\n")
 
 
     timer_active = False
@@ -298,8 +298,9 @@ def run_main(city, arriving, depart, is_headless, menu_format, stepper_adults,
             stepper_kids, stepper_pets, textbox, label_timer, start_button,
             app_instance,
         )
-    except Exception:
+    except Exception as e:
         logger.exception("Scraping failed")
+        print(e)
         timer_active = False
         app_instance.after(
             0,

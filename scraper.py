@@ -10,6 +10,7 @@ def unexpected_notif(page):
 
 def search_city(page, city, arriving, depart, stepper_adults, stepper_kids, stepper_pets):
     page.goto("https://www.airbnb.com/", wait_until="domcontentloaded" )
+
     unexpected_notif(page)
 
     search_bar1 = page.get_by_test_id("structured-search-input-field-query")
@@ -66,10 +67,17 @@ def search_city(page, city, arriving, depart, stepper_adults, stepper_kids, step
 
 
 def get_next_page(page):
+    nav_combined ="""
+        nav[aria_label='Search results pagination'],
+        [aria-label='Search results pagination'],
+        div.cn6uggc
+        """
 
+
+    page.wait_for_selector(nav_combined, timeout=10000)
     next_page = page.get_by_label("Next").last
     try:
-        expect(next_page).to_be_visible(timeout=3000)
+        expect(next_page).to_be_visible(timeout=5000)
         first_card_before = page.locator('div[data-testid="card-container"]').first.inner_text()
 
         next_page.click(timeout=3000)
